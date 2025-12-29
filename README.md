@@ -1,16 +1,8 @@
 # chaos_control
 
-Local home management.
+This app should help you control your house chaos.
 
-## Getting Started
+The idea is to have a centralized place to control reminders, dates, and everything related to your household.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+It will be offline first, everything will be stored and encrypted locally and shared through P2P when you are in your
+home WI-FI(Or any other WI-FI for that matter) also using encryption.

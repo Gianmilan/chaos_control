@@ -1,10 +1,15 @@
+import 'package:chaos_control/hive_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 
 import 'home_page.dart';
 import 'reminders_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await HiveService.init();
+
   runApp(const MyApp());
 }
 
