@@ -16,15 +16,18 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _controller = SideMenuController();
-  int _currentIndex = 0;
-
   final List<Widget> _pages = [const HomePage(), const RemindersPage()];
+  final _controller = SideMenuController();
+
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final resizerPosition = (screenHeight / 2) - 25;
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Chaos Control',
       theme: ThemeData(primarySwatch: Colors.blue),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -33,14 +36,13 @@ class _MyAppState extends State<MyApp> {
             SideMenu(
               controller: _controller,
               backgroundColor: Colors.blueGrey,
-              // Maybe I will enable later idk
+              // TODO: Enabled/disabled?
               hasResizer: false,
               hasResizerToggle: true,
-              resizerToggleData: const ResizerToggleData(
+              resizerToggleData: ResizerToggleData(
                 iconSize: 20,
                 iconColor: Colors.black,
-                // TODO: Change topPosition based on screen height
-                topPosition: 300,
+                topPosition: resizerPosition,
               ),
               mode: SideMenuMode.compact,
               builder: (data) {
@@ -63,7 +65,7 @@ class _MyAppState extends State<MyApp> {
                       icon: const Icon(Icons.home_outlined),
                       selectedIcon: const Icon(Icons.home),
                       tooltipBuilder: (tile) =>
-                          Tooltip(message: "Tooltip message", child: tile),
+                          Tooltip(message: "Go to home", child: tile),
                     ),
                     SideMenuItemDataTile(
                       isSelected: _currentIndex == 1,
@@ -74,7 +76,7 @@ class _MyAppState extends State<MyApp> {
                       icon: const Icon(Icons.calendar_today_outlined),
                       selectedIcon: const Icon(Icons.calendar_today),
                       tooltipBuilder: (tile) =>
-                          Tooltip(message: "Tooltip message", child: tile),
+                          Tooltip(message: "Go to reminders", child: tile),
                     ),
                   ],
                   footer: const Text('Footer'),
