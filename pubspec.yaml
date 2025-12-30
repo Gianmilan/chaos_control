@@ -9,13 +9,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  logger: ^2.6.2
+  nsd: ^4.1.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  flutter_secure_storage: ^10.0.0
   flutter_side_menu: ^0.5.41
   badges: ^3.1.2
   cupertino_icons: ^1.0.8
   table_calendar: ^3.2.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  flutter_secure_storage: ^10.0.0
 
 dev_dependencies:
   flutter_test:

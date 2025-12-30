@@ -31,6 +31,32 @@ class HiveService {
     return Hive.box(_boxName);
   }
 
+  static Map<String, dynamic> getAllReminders() {
+    final box = getRemindersBox();
+
+    return Map<String, dynamic>.from(box.toMap());
+  }
+
+  static Future<void> addAllReminders(Map<String, dynamic> incomingData) async {
+    final box = getRemindersBox();
+
+    for (var dateKey in incomingData.keys) {
+      final List<dynamic> localData = box.get(dateKey) ?? [];
+      final List<dynamic> remoteData = incomingData[dateKey] ?? [];
+
+      final combined = [...localData, ...remoteData];
+
+      final seen = <String>{};
+      final uniqueReminders = combined.where((reminder) {
+        final fingerprint =
+            "${reminder['title']}-${reminder['hour']}-${reminder['minute']}";
+        return seen.add(fingerprint);
+      }).toList();
+
+      await box.put(dateKey, uniqueReminders);
+    }
+  }
+
   static Future<void> addReminder(String task) async {
     final box = getRemindersBox();
 

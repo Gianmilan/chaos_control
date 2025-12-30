@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_side_menu/flutter_side_menu.dart';
 
 import 'home_page.dart';
+import 'network_service.dart';
 import 'reminders_page.dart';
 
 void main() async {
@@ -23,8 +24,50 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final List<Widget> _pages = [const HomePage(), const RemindersPage()];
   final _controller = SideMenuController();
+  final _networkService = NetworkService();
 
   int _currentIndex = 0;
+  bool _isSyncing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _networkService.startServer();
+  }
+
+  @override
+  void dispose() {
+    _networkService.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSync() async {
+    setState(() => _isSyncing = true);
+
+    int foundCount = 0;
+
+    await _networkService.discoverDevices((service) async {
+      foundCount++;
+      await _networkService.syncWithDevice(service);
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Synced with ${service.name}")));
+      }
+    });
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (mounted) {
+      setState(() => _isSyncing = false);
+      if (foundCount == 0) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("No devices found on the network")),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +84,6 @@ class _MyAppState extends State<MyApp> {
             SideMenu(
               controller: _controller,
               backgroundColor: Colors.blueGrey,
-              // TODO: Enabled/disabled?
               hasResizer: false,
               hasResizerToggle: true,
               resizerToggleData: ResizerToggleData(
@@ -84,7 +126,27 @@ class _MyAppState extends State<MyApp> {
                           Tooltip(message: "Go to reminders", child: tile),
                     ),
                   ],
-                  footer: const Text('Footer'),
+                  footer: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: _isSyncing
+                        ? const Center(
+                            child: Center(
+                              child: SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: _handleSync,
+                            icon: const Icon(Icons.sync, color: Colors.white),
+                            tooltip: "Sync with local devices",
+                          ),
+                  ),
                 );
               },
             ),
