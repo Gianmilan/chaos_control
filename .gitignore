@@ -49,3 +49,6 @@ Thumbs.db
 
 # Web specific
 .web/
+
+# Claude
+.CLAUDE.md
